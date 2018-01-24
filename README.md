@@ -8,7 +8,7 @@
 ```
 pip3 install prettytable  
 ```
-3.Win用cmd,Mac用终端必须进入文件所在目录及用以下运行
+3. Win用cmd,Mac用终端必须进入文件所在目录及用以下运行
 ```
 python3 QuizHelper.py
 ```
