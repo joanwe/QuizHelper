@@ -24,7 +24,7 @@ def get_key():
     elif int(index) == 3:
         api_key = 'xigua'
     elif int(index) == 4:
-        api_key = 'hujiao'
+        api_key = 'huajiao'
     elif int(index) == 5:
         api_key = 'hjsm'
     else:
