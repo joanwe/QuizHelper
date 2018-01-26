@@ -15,7 +15,7 @@ pip3 install bs4
 python3 QuizHelper.py
 ```
 4. 开始时数字键输入选择答题app
-# 使用步骤
+# 更新日志
 + 2018.01.26
     + 采用了异步IO(asyncio&aiohttp)的方式并发获取搜索数据
     + 细分代码模块,优化了首页出现次数算法
