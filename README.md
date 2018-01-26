@@ -17,8 +17,8 @@ python3 QuizHelper.py
 4. 开始时数字键输入选择答题app
 # Update
 * 2018.01.26
-  - 采用了异步IO(asyncio&aiohttp)的方式并发抓取搜索数据
-  - 细分代码模块,修改了首页出现次数算法
+  - 采用了异步IO(asyncio&aiohttp)的方式并发搜索数据
+  - 细分代码模块,修改了词频计数方式
   - 添加了一直播黄金十秒入口
 
 # Next
