@@ -12,7 +12,7 @@ import json
 from QH_print import table
 
 
-# 获取搜索结果总数
+# 获取结果总数
 async def get_search_counts(title, anwsers, search_counts):
     async with aiohttp.ClientSession() as session:
         async with session.get('http://www.baidu.com/s?wd=' + title + ' ' + anwsers) as resp1:
@@ -23,15 +23,18 @@ async def get_search_counts(title, anwsers, search_counts):
             search_counts[anwsers] = html1[:index].replace(',', '')
 
 
-# 获取首页出现次数
-async def get_appear_counts(title, anwers, appear_counts):
+# 获取词频计数
+async def get_appear_counts(title, answers_list, appear_counts):
     async with aiohttp.ClientSession() as session:
         async with session.get('http://www.baidu.com/s?wd=' + title) as resp2:
             html2 = await resp2.text()
             html2 = bs4(html2, 'lxml')
             html2 = html2.find_all('div', attrs={'class': 'result c-container '})
-            html2 = str(html2)
-            appear_counts[anwers] = html2.count(anwers)
+            texts = ''
+            for text in html2:
+                texts = texts + text.get_text()
+            for obj in answers_list:
+                appear_counts[obj] = texts.count(obj)
 
 
 # 处理数据表格
@@ -40,18 +43,20 @@ def data_processing(value):
     if len(value['answers']) > 0:
         search_counts = {}
         appear_counts = {}
-        for name in value['answers']:
-            search_counts = {name: 0}
-            appear_counts = {name: 0}
+        answers_list = []
+        for tag in value['answers']:
+            search_counts = {tag: 0}
+            appear_counts = {tag: 0}
+            answers_list.append(tag)
         title = value['title']
         table.clear_rows()
 
         # 异步io 获取数据结果
         async def main():
-            coroutines1 = [get_search_counts(title, answers, search_counts) for answers in value['answers']]
-            coroutines2 = [get_appear_counts(title, answers, appear_counts) for answers in value['answers']]
-            coroutines = coroutines1 + coroutines2
-            tasks = [asyncio.ensure_future(coroutine) for coroutine in coroutines]
+            cor1 = [get_search_counts(title, answers, search_counts) for answers in value['answers']]
+            cor2 = [get_appear_counts(title, answers_list, appear_counts)]
+            cor = cor1 + cor2
+            tasks = [asyncio.ensure_future(cor) for cor in cor]
             await asyncio.wait(tasks)
 
         # 启动和关闭事件循环

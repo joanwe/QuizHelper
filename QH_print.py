@@ -7,7 +7,7 @@
 import json
 from prettytable import PrettyTable
 
-table = PrettyTable(['答案选项', '搜索结果总数', '首页出现次数'])
+table = PrettyTable(['答案选项', '结果总数', '词频计数'])
 table.align = 'l'
 
 
