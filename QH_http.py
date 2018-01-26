@@ -16,7 +16,7 @@ api_key = ''
 # 获取api_key
 def get_key():
     global api_key
-    index = input('请选择答题APP:\n1:冲顶大会\n2:芝士超人\n3:西瓜百万英雄\n4:花椒百万赢家\n5:一直播黄金十秒\n')
+    index = input('数字键选择:\n1:冲顶大会\n2:芝士超人\n3:西瓜百万英雄\n4:花椒百万赢家\n5:一直播黄金十秒\n')
     if int(index) == 1:
         api_key = 'cddh'
     elif int(index) == 2:
