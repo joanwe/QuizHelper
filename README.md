@@ -10,11 +10,14 @@ pip3 install prettytable  
 pip3 install aiohttp
 pip3 install bs4
 ```
-3. Win用cmd,Mac用终端先转到文件所在目录及用以下方式运行
+3. 安装lxml解析器
+4. 终端先转到文件所在目录再输入以下命令
+
 ```
 python3 QuizHelper.py
 ```
-4. 开始时数字键输入选择答题app
+5. 开始时数字键输入选择答题app
+
 # Update
 * 2018.01.26
   - 采用了异步IO(asyncio&aiohttp)的方式并发搜索数据
