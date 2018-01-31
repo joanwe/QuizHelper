@@ -1,6 +1,8 @@
 # QuizHelper
-手机答题辅助工具,用的是搜狗的api,无需手机截图OCR,支持冲顶/芝士/西瓜/花椒/一直播,显示搜狗推荐答案及参考/百度搜索结果总数及词频计数
+手机答题辅助工具,提取搜狗汪仔答题助手api,无需手机截图OCR,显示搜狗推荐答案及参考/百度搜索结果总数及词频计数,支持冲顶/芝士/西瓜/花椒/一直播
+
 ![Screenshots](https://github.com/joanwe/QuizHelper/blob/master/Screenshots.png)
+
 # Tips
 1. 安装python3以及pip
 2. 安装所需python包
