@@ -21,15 +21,15 @@ def main():
                 data_processing(value)
                 print_table(value)
             else:
-                global sum
-                sum += 1
-                string = '页面刷新中...共计%d次' % sum
+                global counter
+                counter += 1
+                string = '页面刷新中...共计%d次' % counter
                 print('\r', string, end='')  # 覆盖打印不换行
                 time.sleep(0.5)
 
 
-# 刷新次数
-sum = 0
+# 计数器
+counter = 0
 
 # 判断是否出现新题目
 results = set([])

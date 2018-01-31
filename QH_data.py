@@ -17,7 +17,6 @@ async def get_search_counts(question, anwsers, search_counts):
         if question.find('.') != -1:
             index = question.find('.')
             question = question[index + 1:]
-
         async with session.get('http://www.baidu.com/s', params={'wd': quote(question) + quote(anwsers)},
                                headers=headers) as resp:
             html = await resp.text()
