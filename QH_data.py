@@ -5,36 +5,32 @@
 # QH_data.py 2018/1/25 21:57
 # desc:
 
-import asyncio
-import aiohttp
+import asyncio, aiohttp, json, re
 from bs4 import BeautifulSoup as bs4
-import json
 from QH_print import table
+from urllib.parse import quote
 
 
 # 获取结果总数
 async def get_search_counts(title, anwsers, search_counts):
     async with aiohttp.ClientSession() as session:
-        async with session.get('http://www.baidu.com/s?wd=' + title + ' ' + anwsers) as resp1:
-            html1 = await resp1.text()
-            index = html1.find('百度为您找到相关结果约') + 11
-            html1 = html1[index:]
-            index = html1.find('个')
-            search_counts[anwsers] = html1[:index].replace(',', '')
+        async with session.get('http://www.baidu.com/s', params={'wd': quote(title) + quote(anwsers)},
+                               headers=headers) as resp:
+            html = await resp.text()
+            index = re.findall('百度为您找到相关结果约([\d|,]+)个', html)
+            search_counts[anwsers] = index[0]
 
 
 # 获取词频计数
 async def get_appear_counts(title, answers_list, appear_counts):
     async with aiohttp.ClientSession() as session:
-        async with session.get('http://www.baidu.com/s?wd=' + title) as resp2:
-            html2 = await resp2.text()
-            html2 = bs4(html2, 'lxml')
-            html2 = html2.find_all('div', attrs={'class': 'result c-container '})
-            texts = ''
-            for text in html2:
-                texts = texts + text.get_text()
-            for obj in answers_list:
-                appear_counts[obj] = texts.count(obj)
+        async with session.get('http://www.baidu.com/s', params={'wd': quote(title)}, headers=headers) as resp:
+            html = await resp.text()
+            soup = bs4(html, 'lxml')
+            data = soup.find_all('div', class_='result c-container ')
+            data = str(data)
+            for answer in answers_list:
+                appear_counts[answer] = len(re.findall(answer, data, re.I))
 
 
 # 处理数据表格
@@ -71,3 +67,8 @@ def data_processing(value):
         table.add_row(['1.' + index[0], search_counts[index[0]], appear_counts[index[0]]])
         table.add_row(['2.' + index[1], search_counts[index[1]], appear_counts[index[1]]])
         table.add_row(['3.' + index[2], search_counts[index[2]], appear_counts[index[2]]])
+
+
+headers = {
+    'User-Agent': 'Mozilla/4.0+(compatible;+MSIE+8.0;+Windows+NT+5.1;+Trident/4.0;+GTB7.1;+.NET+CLR+2.0.50727)'
+}

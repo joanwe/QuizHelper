@@ -34,7 +34,7 @@ def get_key():
 
 # 获取搜狗api内容
 def get_content():
-    api = 'http://140.143.49.31/api/ans2?key=' + api_key
+    api = 'http://140.143.49.31/api/ans2?wdcallback=xx&key=' + api_key
     headers = {
         'Referer': 'http://wd.sa.sogou.com',
         'User-Agent': ('User-Agent: Mozilla/5.0 (X11; Linux x86_64) '
