@@ -18,9 +18,10 @@ def print_table(value):
     letter = ''
     letters = ['1.', '2.', '3.']
     recommend = value['recommend']
+    result = value['result']
     summary = value['search_infos'][0]['summary']
     for i in value['answers']:
-        if recommend in i:
+        if recommend or result in i:
             letter = letters[value['answers'].index(i)]
     for i in value['answers']:
         if i in summary:
@@ -29,6 +30,9 @@ def print_table(value):
     print('\b' * 24, end='', flush=True)  # 删除前面打印字符
     print(title)
     print(table)
-    print('推荐答案:', letter + value['recommend'])
+    if value['recommend'] == '啊呀，这题汪仔还在想':
+        print('推荐答案:', letter + result)
+    else:
+        print('推荐答案:', letter + recommend)
     print('参考:', summary)
     print('\n')

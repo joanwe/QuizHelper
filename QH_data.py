@@ -12,9 +12,13 @@ from urllib.parse import quote
 
 
 # 获取结果总数
-async def get_search_counts(title, anwsers, search_counts):
+async def get_search_counts(question, anwsers, search_counts):
     async with aiohttp.ClientSession() as session:
-        async with session.get('http://www.baidu.com/s', params={'wd': quote(title) + quote(anwsers)},
+        if question.find('.') != -1:
+            index = question.find('.')
+            question = question[index + 1:]
+
+        async with session.get('http://www.baidu.com/s', params={'wd': quote(question) + quote(anwsers)},
                                headers=headers) as resp:
             html = await resp.text()
             index = re.findall('百度为您找到相关结果约([\d|,]+)个', html)
@@ -22,15 +26,25 @@ async def get_search_counts(title, anwsers, search_counts):
 
 
 # 获取词频计数
-async def get_appear_counts(title, answers_list, appear_counts):
+async def get_appear_counts(question, answers_list, appear_counts):
     async with aiohttp.ClientSession() as session:
-        async with session.get('http://www.baidu.com/s', params={'wd': quote(title)}, headers=headers) as resp:
+        if question.find('.') != -1:
+            index = question.find('.')
+            question = question[index + 1:]
+        async with session.get('http://www.baidu.com/s', params={'wd': quote(question)}, headers=headers) as resp:
             html = await resp.text()
             soup = bs4(html, 'lxml')
-            data = soup.find_all('div', class_='result c-container ')
-            data = str(data)
+            title = soup.find_all('h3', class_='t')
+            summary = soup.find_all('div', class_='c-abstract')
+            title_list = ''
+            summary_list = ''
+            for t in title:
+                title_list += '\n' + t.get_text()
+            for s in summary:
+                summary_list += '\n' + s.get_text()
+            txt = title_list + summary_list
             for answer in answers_list:
-                appear_counts[answer] = len(re.findall(answer, data, re.I))
+                appear_counts[answer] = len(re.findall(answer, txt, re.I))
 
 
 # 处理数据表格
@@ -44,13 +58,13 @@ def data_processing(value):
             search_counts = {tag: 0}
             appear_counts = {tag: 0}
             answers_list.append(tag)
-        title = value['title']
+        quesiton = value['title']
         table.clear_rows()
 
         # 异步io 获取数据结果
         async def main():
-            cor1 = [get_search_counts(title, answers, search_counts) for answers in value['answers']]
-            cor2 = [get_appear_counts(title, answers_list, appear_counts)]
+            cor1 = [get_search_counts(quesiton, answers, search_counts) for answers in value['answers']]
+            cor2 = [get_appear_counts(quesiton, answers_list, appear_counts)]
             cor = cor1 + cor2
             tasks = [asyncio.ensure_future(cor) for cor in cor]
             await asyncio.wait(tasks)
