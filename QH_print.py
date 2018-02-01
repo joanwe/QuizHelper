@@ -8,7 +8,7 @@ import json
 from prettytable import PrettyTable
 
 table = PrettyTable(['答案选项', '结果总数', '词频计数'])
-table.align['答案选项'] = 'l'
+table.align= 'l'
 
 
 # 打印表格
