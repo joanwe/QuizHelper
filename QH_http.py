@@ -33,17 +33,15 @@ def get_key():
 # 获取搜狗api内容
 def get_content():
     api = 'http://140.143.49.31/api/ans2?wdcallback=xx&key=' + api_key
-    html = requests.get(api, headers=headers).text
-    try:
-        if len(html) != 0:
-            html = html[html.find("(") + 1: len(html) - 1]
-            return json.loads(html)['result']
-        else:
-            print('赋值错误')
-    except:
-        html = requests.get(api, headers=headers).text
-        html = html[html.find("(") + 1: len(html) - 1]
-        return json.loads(html)['result']
+    req = requests.get(api, headers=headers)
+    html = req.text.lstrip('xx(').rstrip(')')
+    scode = req.status_code
+    # 若响应代码为404则重新请求
+    while scode == 404:
+        req = requests.get(api, headers=headers)
+        scode = req.status_code
+        html = req.text.lstrip('xx(').rstrip(')')
+    return json.loads(html)['result']
 
 
 headers = {
