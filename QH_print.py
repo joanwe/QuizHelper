@@ -15,15 +15,10 @@ table.align['答案选项'] = 'l'
 def print_table(value):
     value = json.loads(value)
     title = value['title']
+    letters = ['1.', '2.', '3.']
     recommend = value['recommend']
     result = value['result']
     summary = value['search_infos'][0]['summary']
-    dic = {}
-    sum = 1
-    for i in value['answers']:
-        if recommend or result in i:
-            dic[i] = sum
-            sum += 1
     for i in value['answers']:
         if i in summary:
             # 打印绿色高亮字体    '\033[0;32m' +  + '\033[0m'
@@ -32,9 +27,8 @@ def print_table(value):
     print(title)
     print(table)
     if value['recommend'] == '啊呀，这题汪仔还在想':
-        print('推荐答案:', str(dic[result]) ,result)
-
+        print('推荐答案:', '-->' + result + '<--')
     else:
-        print('推荐答案:', str(dic[recommend]) ,recommend)
+        print('推荐答案:', '-->' + recommend + '<--')
     print('参考:', summary)
     print('\n')

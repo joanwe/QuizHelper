@@ -44,4 +44,5 @@ def get_content():
     html = req.get(api, headers=headers)
     html = html.text
     html = html[html.find("(") + 1: len(html) - 1]
+    print(json.loads(html))
     return json.loads(html)['result']
