@@ -30,5 +30,5 @@ python3 QuizHelper.py
 # Next
 
 - 优化算法,通过google获取词频计数
-- 通过第三方接码平台获取复活卡
+
 
