@@ -5,10 +5,8 @@
 # QH_http.py 2018/1/25 21:57
 # desc:
 
-import requests as req
+import requests
 import json
-from math import floor
-from random import random
 
 api_key = ''
 
@@ -35,14 +33,25 @@ def get_key():
 # 获取搜狗api内容
 def get_content():
     api = 'http://140.143.49.31/api/ans2?wdcallback=xx&key=' + api_key
-    headers = {
-        'Referer': 'http://wd.sa.sogou.com',
-        'User-Agent': ('User-Agent: Mozilla/5.0 (X11; Linux x86_64) '
-                       'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36 Sogousearch/Ios/5.9.7'),
-        'Cookie': 'dt_ssuid=' + str(floor(100000 * random()))
-    }
-    html = req.get(api, headers=headers)
-    html = html.text
-    html = html[html.find("(") + 1: len(html) - 1]
-    print(json.loads(html))
-    return json.loads(html)['result']
+    html = requests.get(api, headers=headers).text
+    try:
+        if len(html) != 0:
+            html = html[html.find("(") + 1: len(html) - 1]
+            return json.loads(html)['result']
+        else:
+            print('赋值错误')
+    except:
+        html = requests.get(api, headers=headers).text
+        html = html[html.find("(") + 1: len(html) - 1]
+        return json.loads(html)['result']
+
+
+headers = {
+    'Host': '140.143.49.31',
+    'Connection': 'keep-alive',
+    'Accept': '*/*',
+    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_3_5 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13G36 Sogousearch/Ios/5.9.7',
+    'Accept-Language': 'zh-cn',
+    'Referer': 'http://nb.sa.sogou.com/',
+    'Accept-Encoding': 'gzip, deflate'
+}
