@@ -32,9 +32,9 @@ def print_table(value):
     print(title)
     print(table)
     if value['recommend'] == '啊呀，这题汪仔还在想':
-        print('推荐答案:', str(dic[result]) + '.' + result)
+        print('推荐答案:', str(dic[result]) ,result)
 
     else:
-        print('推荐答案:', str(dic[recommend]) + '.' + recommend)
+        print('推荐答案:', str(dic[recommend]) ,recommend)
     print('参考:', summary)
     print('\n')
