@@ -48,7 +48,6 @@ async def get_appear_counts(question, answers_list, appear_counts):
 
 # 处理数据表格
 def data_processing(value):
-    value = json.loads(value)
     if len(value['answers']) > 0:
         search_counts = {}
         appear_counts = {}

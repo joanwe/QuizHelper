@@ -13,10 +13,9 @@ table.align= 'l'
 
 # 打印表格
 def print_table(value):
-    value = json.loads(value)
     title = value['title']
     result = value['result']
-    summary = value['search_infos'][0]['summary']
+    summary = value['summary']
     for i in value['answers']:
         if i in summary:
             # 打印绿色高亮字体    '\033[0;32m' +  + '\033[0m'

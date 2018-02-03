@@ -15,28 +15,27 @@ import time
 def main():
     get_key()
     while True:
-        for value in get_content():
-            if not isInresults(value):
-                results.add(value)
-                data_processing(value)
-                print_table(value)
-            else:
-                global counter
-                counter += 1
-                string = '页面刷新中...共计%d次' % counter
-                print('\r', string, end='')  # 覆盖打印不换行
-                time.sleep(0.5)
+        if not isInresults(get_content()):
+            results['title']=get_content()['title']
+            data_processing(get_content())
+            print_table(get_content())
+        else:
+            global counter
+            counter += 1
+            string = '页面刷新中...共计%d次' % counter
+            print('\r', string, end='')  # 覆盖打印不换行
+            time.sleep(0.5)
 
 
 # 计数器
 counter = 0
 
 # 判断是否出现新题目
-results = set([])
+results = {'title':''}
 
 
 def isInresults(value):
-    return value in results
+    return value['title'] == results['title']
 
 
 if __name__ == '__main__':

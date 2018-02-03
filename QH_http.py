@@ -32,6 +32,7 @@ def get_key():
 
 # 获取搜狗api内容
 def get_content():
+    content = {}
     api = 'http://140.143.49.31/api/ans2?wdcallback=xx&key=' + api_key
     req = requests.get(api, headers=headers)
     html = req.text.lstrip('xx(').rstrip(')')
@@ -41,7 +42,17 @@ def get_content():
         req = requests.get(api, headers=headers)
         scode = req.status_code
         html = req.text.lstrip('xx(').rstrip(')')
-    return json.loads(html)['result']
+        fetch_content(content,html)
+    fetch_content(content,html)
+    return content
+
+#提取api有效内容
+def fetch_content(content,html):
+    html = json.loads(html)['result'][-1]
+    content['answers'] = [i.strip() for i in json.loads(html)['answers']]
+    content['title'] = json.loads(html)['title']
+    content['result'] = json.loads(html)['result']
+    content['summary'] = json.loads(html)['search_infos'][0]['summary']
 
 
 headers = {
