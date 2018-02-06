@@ -5,7 +5,7 @@
 # QH_data.py 2018/1/25 21:57
 # desc:
 
-import asyncio, aiohttp, json, re
+import asyncio, aiohttp, re
 from bs4 import BeautifulSoup as bs4
 from QH_print import table
 from urllib.parse import quote

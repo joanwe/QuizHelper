@@ -7,24 +7,34 @@
 
 import requests
 import json
+from websocket import create_connection
 
-api_key = ''
+api_id = ''
+content = {}
+switch = 0
 
 
-# 获取api_key
+# 选择答题app及获取api_id
 def get_key():
-    global api_key
-    index = input('数字键选择:\n1:冲顶大会\n2:芝士超人\n3:西瓜百万英雄\n4:花椒百万赢家\n5:一直播黄金十秒\n')
+    global api_id, switch
+    index = input('数字键选择:\n' + channel_infos() + '6.优酷疯狂夺金\n')
     if int(index) == 1:
-        api_key = 'cddh'
+        api_id = 'xiguashipin'
+        switch = 1
     elif int(index) == 2:
-        api_key = 'zscr'
+        api_id = 'huajiao'
+        switch = 1
     elif int(index) == 3:
-        api_key = 'xigua'
+        api_id = 'chongdingdahui'
+        switch = 1
     elif int(index) == 4:
-        api_key = 'huajiao'
+        api_id = 'hjsm'
     elif int(index) == 5:
-        api_key = 'hjsm'
+        api_id = 'zhishichaoren'
+        switch = 1
+    elif int(index) == 6:
+        api_id = 'youku'
+        switch = 1
     else:
         print("输入错误,请重新选择")
         get_key()
@@ -32,8 +42,7 @@ def get_key():
 
 # 获取搜狗api内容
 def get_content():
-    content = {}
-    api = 'http://140.143.49.31/api/ans2?wdcallback=xx&key=' + api_key
+    api = 'http://140.143.49.31/api/ans2?wdcallback=xx&key=' + api_id
     req = requests.get(api, headers=headers)
     html = req.text.lstrip('xx(').rstrip(')')
     scode = req.status_code
@@ -42,18 +51,64 @@ def get_content():
         req = requests.get(api, headers=headers)
         scode = req.status_code
         html = req.text.lstrip('xx(').rstrip(')')
-        fetch_content(content,html)
-    fetch_content(content,html)
+        fetch_content(content, html)
+    fetch_content(content, html)
     return content
 
-#提取api有效内容
-def fetch_content(content,html):
-    html = json.loads(html)['result'][-1]
-    content['answers'] = [i.strip() for i in json.loads(html)['answers']]
-    content['title'] = json.loads(html)['title']
-    content['result'] = json.loads(html)['result']
-    content['summary'] = json.loads(html)['search_infos'][0]['summary']
 
+# 获取简单搜索websocket数据包
+def get_DANcontent():
+    global content
+    ws = create_connection('wss://selab.baidu.com/nv/answer.sock/?EIO=3&transport=websocket')
+    ws.send('40/nv/' + api_id + '/answer,')
+    for i in range(5):
+        message = ws.recv()
+        # print(message)
+        if 'question' in message:
+            message = message[message.find('{'):].rstrip(']')
+            dic = json.loads(message)
+            content['title'] = dic['question']['text']
+            content['answers'] = [ans['text'] for ans in dic['answers']]
+            content['result'] = content['answers'][dic['result']]
+            content['summary'] = '暂无参考'
+        else:
+            content['title'] = 'Dan哥热身中,题目还在路上...'
+            content['answers'] = ['暂无答案', '暂无答案', '暂无答案']
+            content['result'] = '暂无答案'
+            content['summary'] = '暂无参考'
+    return content
+
+
+# 提取搜狗api有效内容
+def fetch_content(content, html):
+    if len(html) > 0:
+        html = json.loads(html)['result'][-1]
+        content['answers'] = [i.strip() for i in json.loads(html)['answers']]
+        content['title'] = json.loads(html)['title']
+        content['result'] = json.loads(html)['result']
+        content['summary'] = json.loads(html)['search_infos'][0]['summary']
+    else:
+        get_content()
+
+
+# 获取答题app列表及相关信息
+def channel_infos():
+    txt = ''
+    html = requests.get('https://sa.sogou.com/weball/api/assistant/index').json()
+    seq = 1
+    for key in html['channelTypeList']:
+        del key['channel'], key['icon'], key['status'], key['ts']
+        key['name'] = str(seq) + '.' + key['name']
+        seq += 1
+        tup = list(key.values())
+        for i in range(len(tup)):
+            if i == 0:
+                txt += tup[i]
+            elif i == 1:
+                txt += '    ' + tup[i]
+            else:
+                txt += '    ' + tup[i] + '\n'
+    return txt
 
 headers = {
     'Host': '140.143.49.31',
