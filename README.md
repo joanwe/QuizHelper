@@ -42,8 +42,6 @@ python3 QuizHelper.py
 
 # Next
 
-- GUI化
-
 - 欢迎有缘人在Issues中提出建议及改进,谢谢^^
 
   ​
