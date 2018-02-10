@@ -14,7 +14,7 @@ table.align = 'l'
 def print_table(value):
     title = value['title'].strip()
     answers = value['answers']
-    print('\b' * 40, end='', flush=True)  # 删除前面打印字符
+    print('\b' * 60, end='', flush=True)  # 删除前面打印字符
     print(title)
     print(table)
     from QH_http import api_id
