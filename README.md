@@ -9,8 +9,9 @@
 pip3 install prettytable  
 pip3 install aiohttp
 pip3 install bs4
+pip3 install websocket-client
 ```
-3. 安装lxml解析器 [知乎里搜索具体安装方法吧](https://www.zhihu.com/question/30047496/answer/108902875)
+3. 安装lxml解析器 [知乎搜索具体安装方法](https://www.zhihu.com/question/30047496/answer/108902875)
 4. 终端先转到文件所在目录再输入以下命令
 
 ```

@@ -84,7 +84,7 @@ def get_DANcontent(q):
     content = {}
     ws = create_connection('wss://selab.baidu.com/nv/answer.sock/?EIO=3&transport=websocket')
     ws.send('40/nv/' + api_id[1] + '/answer,')
-    for i in range(5):
+    for i in range(3):
         message = ws.recv()
         # print(message)
         if q in message:
@@ -92,7 +92,7 @@ def get_DANcontent(q):
             dic = json.loads(message)
             content['title'] = dic['question']['text']
             content['answers'] = [ans['text'] for ans in dic['answers']]
-            content['result'] = '暂无答案'
+            content['result'] = content['answers'][content['result']]
             content['summary'] = '暂无参考'
         else:
             content['title'] = 'Dan哥热身中,题目还在路上...'

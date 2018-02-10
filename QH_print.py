@@ -14,19 +14,26 @@ table.align = 'l'
 def print_table(value):
     title = value['title'].strip()
     answers = value['answers']
-    print('\b' * 38, end='', flush=True)  # 删除前面打印字符
+    print('\b' * 40, end='', flush=True)  # 删除前面打印字符
     print(title)
     print(table)
     from QH_http import api_id
-    if api_id == 'youku':
+    # 判断采用汪仔推荐答案还是Dan哥答案
+    if api_id[0]== 'youku':
         from QH_http import get_DANcontent
         content = get_DANcontent('result')
         result = content['result']
+        sum = 0
         while result not in answers:
-            content = get_DANcontent('result')
-            result = content['result']
-            print('推荐答案:' + '-->' + result + '<--')
-            print('\n')
+            if sum < 3:
+                content = get_DANcontent('result')
+                result = content['result']
+                sum += 1
+            else:
+                result = '啊呀,这题Dan哥还在想'
+                break
+        print('Dan哥推荐答案:' + '-->' + result + '<--')
+        print('\n')
     else:
         from QH_http import get_WANcontent
         content = get_WANcontent()
@@ -45,6 +52,6 @@ def print_table(value):
             if i in summary:
                 # 打印绿色高亮字体    '\033[0;32m' +  + '\033[0m'
                 summary = summary.replace(i, '\033[0;32m' + i + '\033[0m')
-        print('推荐答案:' + '-->' + result + '<--')
+        print('汪仔推荐答案:' + '-->' + result + '<--')
         print('参考:', summary)
         print('\n')
